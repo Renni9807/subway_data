@@ -1,9 +1,13 @@
 import requests
 import json
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class kr_subway_timeTaken : 
     def __init__(self):
-        self.auth_key = "446279734c72656e35354c4b575771"
+        self.auth_key = os.getenv('API_KEY')
         
         
     def start_work_first(self): # get all names of subway stations (Seoul)
@@ -152,7 +156,7 @@ class kr_subway_timeTaken :
         self.target_dict_LineUijeongbuLightRailway = [{key: entry[key] for key in self.target_keys} for entry in self.getInfoLineUijeongbuLightRailway]
         self.target_dict_LineGimpoUrbanRailway = [{key: entry[key] for key in self.target_keys} for entry in self.getInfoLineGimpoUrbanRailway]
         
-        print(self.target_dict_LineAirport, "\n\n\n", self.target_dict_LineGyeonggang)
+        print(self.target_dict_LineAirport, "\n\n\n", self.target_dict_LineGyeonggang, "\n\n")
      
              
 
