@@ -13,7 +13,7 @@ class KrSearchSTNBySubwayLineInfo :
     def start_first_work(self): # get all names of subway stations (Seoul)
         
         try:
-            url = f"http://openapi.seoul.go.kr:8088/{self.auth_key}/json/SearchSTNBySubwayLineInfo/1/1000/"
+            url = f"http://openapi.seoul.go.kr:8088/{self.auth_key}/json/SearchSTNBySubwayLineInfo/0/999/"
         
             response = requests.get(url)
             response.raise_for_status() # go to except block if error
@@ -48,8 +48,8 @@ class KrSearchSTNBySubwayLineInfo :
             print("Error occurred during the HTTP requests:", str(e))
         except Exception as e:
             print("Error occurs:", str(e))
-        finally:
-            print(response.status_code, "\n\n\n")    
+        # finally:
+        #     print(response.status_code, "\n\n\n")    
         
     def start_second_work(self):
         line_nums = ['01호선', '02호선', '03호선', '04호선', '05호선', '06호선', '07호선', '08호선', '09호선', '인천2호선', '인천선', '수인분당선', '신분당선', '경의선', '경춘선', '경강선', '공항철도', '서해선', '신림선', '우이신설경전철', '의정부경전철', '김포도시철도']
@@ -66,8 +66,8 @@ class KrSearchSTNBySubwayLineInfo :
         try:
             r = redis.Redis(host='localhost', port=6379, decode_responses=True)
             self_str = pickle.dumps(self)  # pickle.dumps(self) --> serializes a python object hierarchy and returns the bytes object of the serialized object
-            r.set('self', self_str)
-            print("connected!")
+            r.set('self', self_str)            
+            
         except Exception as e:
             print("Error occurred while connecting to Redis server:", str(e))
     
@@ -75,6 +75,8 @@ work = KrSearchSTNBySubwayLineInfo()
 work.start_first_work()
 # work.start_second_work()
 work.connect_redis_server()
+
+
 
 
 
