@@ -21,29 +21,34 @@ class KrSearchSTNBySubwayLineInfo :
             data_needed = API_data_dict["SearchSTNBySubwayLineInfo"]["row"]        
             self.data_set = data_needed
 
-            self.getInfoLineOne = [d for d in self.data_set if d.get('LINE_NUM') == '01호선']
-            self.getInfoLineTwo = [d for d in self.data_set if d.get('LINE_NUM') == '02호선']
-            self.getInfoLineThree = [d for d in self.data_set if d.get('LINE_NUM') == '03호선']
-            self.getInfoLineFour = [d for d in self.data_set if d.get('LINE_NUM') == '04호선']
-            self.getInfoLineFive = [d for d in self.data_set if d.get('LINE_NUM') == '05호선']
-            self.getInfoLineSix = [d for d in self.data_set if d.get('LINE_NUM') == '06호선']
-            self.getInfoLineSeven = [d for d in self.data_set if d.get('LINE_NUM') == '07호선']
-            self.getInfoLineEight = [d for d in self.data_set if d.get('LINE_NUM') == '08호선']
-            self.getInfoLineNine = [d for d in self.data_set if d.get('LINE_NUM') == '09호선']
-            self.getInfoLineIncheon2 = [d for d in self.data_set if d.get('LINE_NUM') == '인천2호선']
-            self.getInfoLineIncheon1 = [d for d in self.data_set if d.get('LINE_NUM') == '인천선']   # 인천1호선
-            self.getInfoLineSuinBundang = [d for d in self.data_set if d.get('LINE_NUM') == '수인분당선']
-            self.getInfoLineShinBundang = [d for d in self.data_set if d.get('LINE_NUM') == '신분당선']
-            self.getInfoLineGyeongui = [d for d in self.data_set if d.get('LINE_NUM') == '경의선']
-            self.getInfoLineGyeongchun = [d for d in self.data_set if d.get('LINE_NUM') == '경춘선']
-            self.getInfoLineGyeonggang = [d for d in self.data_set if d.get('LINE_NUM') == '경강선']
-            self.getInfoLineAirport = [d for d in self.data_set if d.get('LINE_NUM') == '공항철도']  # 공항
-            self.getInfoLineWestCoast = [d for d in self.data_set if d.get('LINE_NUM') == '서해선']
-            self.getInfoLineShillim = [d for d in self.data_set if d.get('LINE_NUM') == '신림선']    
-            self.getInfoLineUiiNew = [d for d in self.data_set if d.get('LINE_NUM') == '우이신설경전철'] # 우이신설선
-            self.getInfoLineUijeongbuLightRailway = [d for d in self.data_set if d.get('LINE_NUM') == '의정부경전철'] # 의정부
-            self.getInfoLineGimpoUrbanRailway = [d for d in self.data_set if d.get('LINE_NUM') == '김포도시철도']    # 김포골드
-        
+            line_numbers = {
+                '01호선': 'getInfoLineOne',
+                '02호선': 'getInfoLineTwo',
+                '03호선': 'getInfoLineThree',
+                '04호선': 'getInfoLineFour',
+                '05호선': 'getInfoLineFive',
+                '06호선': 'getInfoLineSix',
+                '07호선': 'getInfoLineSeven',
+                '08호선': 'getInfoLineEight',
+                '09호선': 'getInfoLineNine',
+                '인천2호선': 'getInfoLineIncheon2',
+                '인천선': 'getInfoLineIncheon1',
+                '수인분당선': 'getInfoLineSuinBundang',
+                '신분당선': 'getInfoLineShinBundang',
+                '경의선': 'getInfoLineGyeongui',
+                '경춘선': 'getInfoLineGyeongchun',
+                '경강선': 'getInfoLineGyeonggang',
+                '공항철도': 'getInfoLineAirport',
+                '서해선': 'getInfoLineWestCoast',
+                '신림선': 'getInfoLineShillim',
+                '우이신설경전철': 'getInfoLineUiiNew',
+                '의정부경전철': 'getInfoLineUijeongbuLightRailway',
+                '김포도시철도': 'getInfoLineGimpoUrbanRailway'
+            }
+
+            for line, attribute in line_numbers.items():
+                setattr(self, attribute, [d for d in self.data_set if d.get('LINE_NUM') == line])
+                    
         except requests.exceptions.RequestException as e:
             print("Error occurred during the HTTP requests:", str(e))
         except Exception as e:
@@ -62,11 +67,11 @@ class KrSearchSTNBySubwayLineInfo :
         return [d for d in self.data_set if d.get('LINE_NUM') == line_num]
             
     
-    def connect_redis_server(self):
+    def connect_redis_server_post(self):
         try:
             r = redis.Redis(host='localhost', port=6379, decode_responses=True)
             self_str = pickle.dumps(self)  # pickle.dumps(self) --> serializes a python object hierarchy and returns the bytes object of the serialized object
-            r.set('self', self_str)            
+            r.set('self', self_str)          
             
         except Exception as e:
             print("Error occurred while connecting to Redis server:", str(e))
@@ -74,7 +79,7 @@ class KrSearchSTNBySubwayLineInfo :
 work = KrSearchSTNBySubwayLineInfo()
 work.start_first_work()
 # work.start_second_work()
-work.connect_redis_server()
+work.connect_redis_server_post()
 
 
 
